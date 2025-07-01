@@ -1,0 +1,194 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8" />-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<!--    <title>Git Branches Panel</title>-->
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+<!--</head>-->
+<!--<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">-->
+
+<!--<div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">-->
+<!--    &lt;!&ndash; Header &ndash;&gt;-->
+<!--    <div class="flex flex-col md:flex-row items-center justify-between mb-6 space-y-4 md:space-y-0">-->
+<!--        <h1 class="text-3xl font-bold text-gray-800">Git Project Branches</h1>-->
+<!--        <label class="inline-flex items-center space-x-2">-->
+<!--            <input-->
+<!--                    type="checkbox"-->
+<!--                    id="selectAll"-->
+<!--                    class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"-->
+<!--            />-->
+<!--            <span class="text-gray-800 font-medium">Select All</span>-->
+<!--        </label>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Branch list &ndash;&gt;-->
+<!--    <form>-->
+<!--        <div class="space-y-4">-->
+<!--            {{range $i, $branch := .branches}}-->
+<!--            <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition">-->
+<!--                <label for="branch{{$i}}" class="flex items-center space-x-3">-->
+<!--                    <input-->
+<!--                            type="checkbox"-->
+<!--                            id="branch{{$i}}"-->
+<!--                            name="branches"-->
+<!--                            value="{{$branch.Name}}"-->
+<!--                            class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"-->
+<!--                    />-->
+<!--                    <span class="text-gray-800 font-medium truncate">{{$branch.Name}}</span>-->
+<!--                </label>-->
+<!--                <span class="text-sm text-gray-500 whitespace-nowrap">Commit: {{$branch.LastCommit}}</span>-->
+<!--            </div>-->
+<!--            {{end}}-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Pagination (inside card) &ndash;&gt;-->
+<!--        <div class="mt-8 flex flex-wrap justify-center items-center gap-2">-->
+<!--            {{if gt .page 1}}-->
+<!--            <a href="?page={{sub .page 1}}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">&laquo; Prev</a>-->
+<!--            {{end}}-->
+
+<!--            {{range $i := until .totalPages}}-->
+<!--            <a href="?page={{add $i 1}}"-->
+<!--               class="px-4 py-2 rounded border-->
+<!--               {{if eq (add $i 1) $.page}}bg-red-600 text-white border-red-600{{else}}bg-white text-gray-700 border-gray-300 hover:bg-gray-100{{end}} transition">-->
+<!--                {{add $i 1}}-->
+<!--            </a>-->
+<!--            {{end}}-->
+
+<!--            {{if lt .page .totalPages}}-->
+<!--            <a href="?page={{add .page 1}}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Next &raquo;</a>-->
+<!--            {{end}}-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Submit button &ndash;&gt;-->
+<!--        <div class="mt-6 text-right">-->
+<!--            <button-->
+<!--                    type="submit"-->
+<!--                    class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"-->
+<!--            >-->
+<!--                Remove Selected-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    const selectAll = document.getElementById('selectAll');-->
+<!--    const branches = document.querySelectorAll('input[name="branches"]');-->
+
+<!--    selectAll.addEventListener('change', () => {-->
+<!--        branches.forEach(cb => (cb.checked = selectAll.checked));-->
+<!--    });-->
+
+<!--    branches.forEach(cb => {-->
+<!--        cb.addEventListener('change', () => {-->
+<!--            selectAll.checked = Array.from(branches).every(b => b.checked);-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Git Branches Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+<div class="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
+    <!-- Header -->
+    <div class="flex flex-col md:flex-row items-center justify-between mb-6 space-y-4 md:space-y-0">
+        <h1 class="text-3xl font-bold text-gray-800">Git Project Branches</h1>
+        <label class="inline-flex items-center space-x-2">
+            <input
+                    type="checkbox"
+                    id="selectAll"
+                    class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+            />
+            <span class="text-gray-800 font-medium">Select All</span>
+        </label>
+    </div>
+
+    <form method="POST" action="/delete" onsubmit="prepareFormData()">
+        <input type="hidden" name="branches" id="selectedBranches" />
+        <div class="space-y-4">
+            {{range $i, $branch := .branches}}
+            <div class="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-lg hover:bg-gray-100 transition">
+                <label for="branch{{$i}}" class="flex items-center space-x-3">
+                    <input
+                            type="checkbox"
+                            id="branch{{$i}}"
+                            name="branches"
+                            value="{{$branch.Name}}"
+                            class="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                    />
+                    <span class="text-gray-800 font-medium truncate">{{$branch.Name}}</span>
+                </label>
+                <span class="text-sm text-gray-500 whitespace-nowrap">Commit: {{$branch.LastCommit}}</span>
+            </div>
+            {{end}}
+        </div>
+
+        <!-- Pagination (inside card) -->
+        <div class="mt-8 flex flex-wrap justify-center items-center gap-2">
+            {{if gt .page 1}}
+            <a href="?page={{sub .page 1}}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">&laquo; Prev</a>
+            {{end}}
+
+            {{range $i := until .totalPages}}
+            <a href="?page={{add $i 1}}"
+               class="px-4 py-2 rounded border
+               {{if eq (add $i 1) $.page}}bg-red-600 text-white border-red-600{{else}}bg-white text-gray-700 border-gray-300 hover:bg-gray-100{{end}} transition">
+                {{add $i 1}}
+            </a>
+            {{end}}
+
+            {{if lt .page .totalPages}}
+            <a href="?page={{add .page 1}}" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 transition">Next &raquo;</a>
+            {{end}}
+        </div>
+
+        <!-- Submit button -->
+        <div class="mt-6 text-right">
+            <button
+                    type="submit"
+                    class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition"
+            >
+                Remove Selected
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    const selectAll = document.getElementById('selectAll');
+    const branches = document.querySelectorAll('input[name="branches"]');
+    const selectedBranches = document.getElementById('selectedBranches');
+
+    selectAll.addEventListener('change', () => {
+        branches.forEach(cb => (cb.checked = selectAll.checked));
+    });
+
+    branches.forEach(cb => {
+        cb.addEventListener('change', () => {
+            selectAll.checked = Array.from(branches).every(b => b.checked);
+        });
+    });
+
+    function prepareFormData() {
+        const selected = Array.from(branches)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value)
+            .join(",");
+        selectedBranches.value = selected;
+    }
+</script>
+
+</body>
+</html>

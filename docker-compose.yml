@@ -1,0 +1,25 @@
+services:
+  golang:
+    container_name: ${GO_CONTAINER}
+    image: ${DOCKER_REGISTRY}golang:${GOLANG_VERSION}
+    environment:
+      TZ: Asia/Tehran
+    volumes:
+      - ./:/app
+      - go-modules:/go/pkg/mod
+    ports:
+      - "${PUB_PANEL_GO_PORT}:3000"
+    env_file: .env
+    working_dir: /app
+    entrypoint: /app/docker/app/entrypoint.sh
+
+
+volumes:
+  go-modules:
+
+
+
+networks:
+  default:
+    external: true
+    name: ${NETWORK_NAME}
