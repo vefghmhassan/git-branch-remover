@@ -62,11 +62,9 @@ git clone https://github.com/vefghmhassan/git-branch-remover
 ```sh
 cd git-branch-remover
 ```
+
 ```sh
-cd git-branch-remover
-```
-```sh
-docker build -t vefghmhassan/git-branch-remover .
+docker build -t git-branch-remover .
 ```
 ```sh
 go build
