@@ -1,6 +1,5 @@
 # GIT-BRANCH-REMOVER
 
-*Streamline Your Workflow, Effortlessly Remove Clutter*
 
 ![last-commit](https://img.shields.io/github/last-commit/vefghmhassan/git-branch-remover?style=flat&logo=git&logoColor=white&color=0080ff)
 ![repo-top-language](https://img.shields.io/github/languages/top/vefghmhassan/git-branch-remover?style=flat&color=0080ff)
